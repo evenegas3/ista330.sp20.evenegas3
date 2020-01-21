@@ -1,15 +1,27 @@
+<!-- 
+Erick Venegas
+ISTA330
+01-18-20
+calculator.html
+ -->
+
 <!DOCTYPE html>
-	<html>
+<html>
+
 	<head>
 		<title></title>
-        <script src="service.js" type="text/javascript"></script> 
 	</head>
 
 	<body>
+		<h1 id="test">Please enter your numeric expression</h1>
+		<input type="text" id="input">
+		<button type="button" onclick="myFunction()">Start</button>
 
-		<h1>Please enter your numeric expression</h1>
-		<input type="text" name="expression">
-		<button id="calculate">Start</button>
+		<script>
+			function myFunction() {
+				let info = document.getElementById("input").value;
+			}
+		</script>
 
 	</body>
 

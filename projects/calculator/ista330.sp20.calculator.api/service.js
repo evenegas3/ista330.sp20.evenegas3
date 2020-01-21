@@ -1,21 +1,18 @@
-// Erick Venegas
+// dependencies
+const express = require(’express’);
+const url = require(’url’);
 
-"use strict";
-(function(){
+//create the server 
+const app = express();
+const port = 3001;
 
-    window.onload = function(){
-        document.getElementById("calculate").onclick = startbutton();
-    };
+// the methods
+app.get(’/’, (request , response) => {
+var urlParts = url.parse(request.url, true);
+var parameters = urlParts.query;
+var expression = parameters.expression;
+response.send(expression + " = ?");
+});
 
-    /**
-    * Function is called when start button is pressed by user.    *
-    * @returns {None}
-    */
-    function startbutton(){
-        info = document.getElementById("expression")
-
-    }
-
-
-
-})();
+// start the server
+app.listen(port, ()=> console.log (’Listening on port’ + port));
