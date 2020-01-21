@@ -13,14 +13,47 @@ calculator.html
 	</head>
 
 	<body>
+
 		<h1 id="test">Please enter your numeric expression</h1>
 		<input type="text" id="input">
 		<button type="button" onclick="myFunction()">Start</button>
+		<h1 id="result"></h1>
+
 
 		<script>
 			function myFunction() {
 				let info = document.getElementById("input").value;
 			}
+<<<<<<< Updated upstream
+=======
+
+			function reload(info){
+				let url = "http://localhost:3001?expression=" + info;
+
+				fetch(url)
+				.then(response => {
+					console.log(response);
+					if(response.status == 200) {
+						return response.json().then(data => {
+							return {status: response.status, data};
+						});
+					} else {
+						console.log('Server error!');
+						return Promise.resolve();
+					}
+				})
+				.then(result => {
+					console.log(result);
+					let ex = result.data.message;
+					document.getElementById("result").innerHTML = ex;
+				});
+				
+				
+			}
+
+			
+
+>>>>>>> Stashed changes
 		</script>
 
 	</body>
