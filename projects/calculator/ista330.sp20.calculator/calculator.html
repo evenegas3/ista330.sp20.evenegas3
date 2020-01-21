@@ -20,7 +20,32 @@ calculator.html
 		<script>
 			function myFunction() {
 				let info = document.getElementById("input").value;
+				reload(info);
 			}
+
+			function reload(info){
+				let url = "http://localhost:3001";
+
+				fetch(url)
+				.then(checkStatus)
+				.then(function(responseText) {
+					let json = JSON.parse(responseText);
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			}
+
+			function checkStatus(response) {  
+			    if (response.status >= 200 && response.status < 300) {  
+			        return response.text();
+			    } else if (response.status == 404) {
+			    	return Promise.reject(new Error("Sorry, we couldn't find that page")); 
+			    } else {  
+			        return Promise.reject(new Error(response.status+": "+response.statusText)); 
+			    } 
+			}
+
 		</script>
 
 	</body>
