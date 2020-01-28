@@ -10,16 +10,17 @@ calculator.html
 
 	<head>
 		<title></title>
+		<script type="text/javascript" src="../ista330.sp20.calculator.api/calculator.js"></script>
 	</head>
 
 	<body>
 
 		<h1 id="test">Please enter your numeric expression</h1>
 		<input type="text" id="input">
-		<button type="button" onclick="myFunction()">Start</button>
+		<button type="button" id="s" onclick="submit()">Start</button>
 		<h1 id="result"></h1>
 
-
+<!-- 
 		<script>
 			function myFunction() {
 				let info = document.getElementById("input").value;
@@ -27,31 +28,37 @@ calculator.html
 			}
 
 			function reload(info){
-				let url = "http://localhost:3001?expression=" + info;
+				// let url = "http://localhost:3001?expression=" + info;
 
-				fetch(url)
-				.then(response => {
-					console.log(response);
-					if(response.status == 200) {
-						return response.json().then(data => {
-							return {status: response.status, data};
-						});
-					} else {
-						console.log('Server error!');
-						return Promise.resolve();
-					}
-				})
-				.then(result => {
-					console.log(result);
-					let ex = result.data.message;
-					document.getElementById("result").innerHTML = ex;
-				});
+				// fetch(url)
+				// .then(response => {
+				// 	console.log(response);
+				// 	if(response.status == 200) {
+				// 		return response.json().then(data => {
+				// 			return {status: response.status, data};
+				// 		});
+				// 	} else {
+				// 		console.log('Server error!');
+				// 		return Promise.resolve();
+				// 	}
+				// })
+				// .then(result => {
+				// 	// console.log("result");
+				// 	// console.log(result);
+				// 	let ex = result.data.message;
+				// 	// console.log("ex");
+				// 	// whole = ex.split(" ");
+				// 	// expression = whole[0];
+				// 	// console.log(expression);
+				// 	// console.log(expression.split("%02"));
+				// 	document.getElementById("result").innerHTML = ex;
+				// });
 				
 				
 			}
 
 			
-		</script>
+		</script> -->
 
 	</body>
 
