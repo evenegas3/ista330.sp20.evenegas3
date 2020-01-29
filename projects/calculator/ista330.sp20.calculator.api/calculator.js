@@ -1,35 +1,34 @@
-// ???
-// let calculate = function(expression) {
-// 	return "-1";
-// }
-// module.exports = {calculate};
+// Erick Venegas
+// ISTA330
+// 01-24-20
+// calculator.js
 
+let calculate = function(expression) {
+	let decode = expression.replace(/%20/g, " ");
+	let stripped = decode.replace(/\s+/g, '');
+	answer = eval(stripped);
+	return answer;
+}
+module.exports = {calculate:calculate};
 
 function submit(){
-	console.log("onclick");
-	let info = document.getElementById("input").value;
-	let url = "http://localhost:3001?expression=" + info;
+	let inputField = document.getElementById("input").value;
+	let url = "http://localhost:3001?expression=" + inputField;
 
 	fetch(url)
 	.then(response => {
-		console.log("fetch");
-		console.log(response);
 		if(response.status == 200) {
 			return response.json().then(data => {
 				return {status: response.status, data};
 			});
 		} else {
-			console.log('Server error!');
+			console.log('Server error! Please check logs');
 			return Promise.resolve();
 		}
 	})
 	.then(result => {
-		let ex = result.data.message;
-		console.log(ex);
-		document.getElementById("result").innerHTML = ex;
+		let finalMessage = result.data.express;
+		document.getElementById("result").innerHTML = finalMessage;
 	});
 
 }
-
-
-
