@@ -16,8 +16,7 @@ const port = 3001;
 // the methods
 app.get('/', cors(), (request , response) => {
 	let expression = request.url.split("=")[1];
-	response.json({express: expression+"= "+calculator.calculate(expression)});
-	// response.send(expression + " = " + calculator.calculate(expression));
+	response.json({express: expression+"="+calculator.calculate(expression)});
 });
 
 app.listen(port, () => console.log("Listening on port" + port));
