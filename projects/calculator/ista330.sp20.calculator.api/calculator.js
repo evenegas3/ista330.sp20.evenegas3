@@ -6,6 +6,18 @@
 let calculate = function(expression) {
 	let decode = expression.replace(/%20/g, " ");
 	let stripped = decode.replace(/\s+/g, '');
+	let firstChar = stripped[0];
+	let lastChar = stripped.charAt(stripped.length - 1);
+	var symbols = ["+", "-", "=", "*", "/"];
+
+	if(symbols.includes(firstChar) && symbols.includes(lastChar)){
+		return "illegal";
+	}
+
+	if (/[a-zA-Z]/.test(stripped)) {
+		return "illegal";
+	}
+
 	answer = eval(stripped);
 	return answer;
 }
@@ -27,7 +39,12 @@ function submit(){
 		}
 	})
 	.then(result => {
-		let finalMessage = result.data.express;
+		var finalMessage = result.data.express;
+
+		if(finalMessage.split("=")[1] === "illegal"){
+			finalMessage = "SyntaxError";
+		}
+
 		document.getElementById("result").innerHTML = finalMessage;
 	});
 
