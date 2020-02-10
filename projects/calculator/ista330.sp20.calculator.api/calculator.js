@@ -2,12 +2,6 @@
 // ISTA330
 // 01-24-20
 // calculator.js
-// function test(){
-// 	let input = document.getElementById("input").value;
-// 	document.getElementById("jasontest").innerHTML = input;
-// }
-
-
 
 let calculate = function(expression) {
 	// let temp = expression.split(/([-+*\/])/);
@@ -25,11 +19,6 @@ let calculate = function(expression) {
 	}
 
 	let prepped = test;
-	exponents(prepped);
-	division(prepped);
-	addition(prepped);
-	subtraction(prepped);
-
 	let firstChar = prepped[0];
 	let lastChar = prepped[prepped.length - 1];
 	var symbols = ["+", "-", "=", "*", "/"];
@@ -39,11 +28,19 @@ let calculate = function(expression) {
 		return "illegal";
 	}
 
+	if (/[a-zA-Z]/.test(prepped.join(""))) {
+		return "illegal";
+	}
+	
+	exponents(prepped);
+	division(prepped);
+	multiplication(prepped);
+	addition(prepped);
+	subtraction(prepped);
+
 	let answer = prepped;
+
 	return answer;
-
-
-
 
 
 
@@ -58,10 +55,6 @@ let calculate = function(expression) {
 	// 	return "illegal";
 	// }
 
-	// if (/[a-zA-Z]/.test(stripped)) {
-	// 	return "illegal";
-	// }
-
 
 	// let temp = addSubtract(stripped);
 	// return temp;
@@ -70,14 +63,13 @@ let calculate = function(expression) {
 }
 module.exports = {calculate:calculate};
 
-function multiplication(){
+function multiplication(express){
 	for(let i = 0; i < express.length; i++){
 		if(express[i] == "*"){
 			let temp = parseInt(express[i-1]) * parseInt(express[i+1]);
 			express[i-1] = temp;
 			express.splice(i, 2);
 			i = i - 1;
-			// console.log("addition method: " + express);
 		}
 	}
 }
@@ -161,6 +153,10 @@ function submit(){
 		if(finalMessage.split("=")[1] === "illegal"){
 			finalMessage = "SyntaxError";
 		}
+		
+		// else if(finalMessage.split("=")[1] === "NaN"){
+		// 	finalMessage = "NaN";
+		// }
 
 		document.getElementById("result").innerHTML = finalMessage;
 	});
