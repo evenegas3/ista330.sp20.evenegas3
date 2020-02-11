@@ -38,12 +38,18 @@ function check(prepped){
 
 let calculate = function(expression) {
 	let temp = expression.split(/([-+*\/])/);
+
 	// console.log(temp);
 
 	for(let i = 0; i < temp.length; i++){
 		if(temp[i] == ""){
 			temp.splice(i, 1);
 		}
+
+		if(check(temp) == false){
+			return "SyntaxError";
+		}
+
 
 		temp[i] = temp[i].trim();
 
@@ -65,40 +71,20 @@ let calculate = function(expression) {
 	//itterate through and if its a number, check that the next one is an operator, else error
 	//if its a number, then operorator, if its the *, then the next is either number or *,
 	//if its number, *, *, then then it should be a number, else error
-	if(check(temp) == false){
-		return "SyntaxError";
-	}
+
+
+	// if(check(temp) == false){
+	// 	return "SyntaxError";
+	// }
 
 
 	let a = exponents(temp);
 	let b = divmulti(a);
 
-	return addsub(b);
+	let answer = addsub(b);
 
 
-	// console.log(exponents(temp));
-	// for(let i = 0; i < temp.length; i++){
-		// if(temp[i] == ""){
-		// 	temp.splice(i, 1);
-		// }
-	// 	temp[i] = temp[i].trim();
-
-		// if(!(/([-+*\/])/.test(temp[i])) || !(/[0-9]+/).test(temp[i])){
-		// 	return "SyntaxError";
-		// }
-
-
-
-
-
-	// }
-
-	// console.log("temp=" + temp);
-	// let n = exponents(temp);
-	// console.log(n);
-
-
-	let answer = temp;
+	// let answer = temp;
 	// console.log(n);
 
 	// console.log("answer:: " + answer);
