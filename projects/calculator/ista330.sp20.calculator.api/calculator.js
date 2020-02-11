@@ -3,112 +3,187 @@
 // 01-24-20
 // calculator.js
 
-let calculate = function(expression) {
-	// let temp = expression.split(/([-+*\/])/);
-	let decode = expression.replace(/%20/g, " ");
-	let stripped = decode.replace(/\s+/g, '');
-	// let punctuations = "*/+-=";
-	let test = stripped.split(/([-+*\/])/);
+// function 
 
-	for(let i=0; i < test.length; i++){
-		if(test[i] == ""){
-			test.splice(i, 1);
-			
+// function prepareInfo(expression){
+// 	/**
+// 	 * Takes in a string expression and removes whitespace and creates an array of expression
+// 	 */
+// 	let decode = expression.replace(/%20/g, " ");
+// 	let stripped = decode.replace(/\s+/g, '');
+// 	let test = stripped.split(/([-+*\/])/);
 
-		}
-	}
+// 	for(let i=0; i < test.length; i++){
+// 		if(test[i] == ""){
+// 			test.splice(i, 1);
+// 		}
+// 	}
+// 	return test;
 
-	let prepped = test;
+// }
+
+function check(prepped){
 	let firstChar = prepped[0];
 	let lastChar = prepped[prepped.length - 1];
 	var symbols = ["+", "-", "=", "*", "/"];
 
-
-	if(symbols.includes(firstChar) && symbols.includes(lastChar)){
-		return "illegal";
+	if(symbols.includes(firstChar) || symbols.includes(lastChar)){
+		return false;
 	}
 
 	if (/[a-zA-Z]/.test(prepped.join(""))) {
-		return "illegal";
+		return false;
 	}
-	
-	exponents(prepped);
-	division(prepped);
-	multiplication(prepped);
-	addition(prepped);
-	subtraction(prepped);
+}
 
-	let answer = prepped;
+let calculate = function(expression) {
+	let temp = expression.split(/([-+*\/])/);
+	// console.log(temp);
 
-	return answer;
+	for(let i = 0; i < temp.length; i++){
+		if(temp[i] == ""){
+			temp.splice(i, 1);
+		}
+
+		temp[i] = temp[i].trim();
+
+		// if(    !(  /([-+*\/])/.test(temp[i])   ) || !/[0-9]+/.test(temp[i])){
+		// 	return "SyntaxError";
+		// }
+
+
+		// for(let n of temp[i]){
+		// 	if(n == " "){
+		// 		return "SyntaxError";
+		// 	}
+		// }
+		// console.log("askdmksamd");
+
+
+	}
+
+	//itterate through and if its a number, check that the next one is an operator, else error
+	//if its a number, then operorator, if its the *, then the next is either number or *,
+	//if its number, *, *, then then it should be a number, else error
+	if(check(temp) == false){
+		return "SyntaxError";
+	}
+
+
+	let a = exponents(temp);
+	let b = divmulti(a);
+
+	return addsub(b);
+
+
+	// console.log(exponents(temp));
+	// for(let i = 0; i < temp.length; i++){
+		// if(temp[i] == ""){
+		// 	temp.splice(i, 1);
+		// }
+	// 	temp[i] = temp[i].trim();
+
+		// if(!(/([-+*\/])/.test(temp[i])) || !(/[0-9]+/).test(temp[i])){
+		// 	return "SyntaxError";
+		// }
 
 
 
-	// console.log(prepped);
 
-	// var chars = stripped.split('');
-	// let firstChar = stripped[0];
-	// let lastChar = stripped.charAt(stripped.length - 1);
-	// var symbols = ["+", "-", "=", "*", "/"];
 
-	// if(symbols.includes(firstChar) && symbols.includes(lastChar)){
-	// 	return "illegal";
 	// }
 
+	// console.log("temp=" + temp);
+	// let n = exponents(temp);
+	// console.log(n);
 
-	// let temp = addSubtract(stripped);
-	// return temp;
-	// answer = eval(stripped);
-	// return answer;
+
+	let answer = temp;
+	// console.log(n);
+
+	// console.log("answer:: " + answer);
+	return answer;
 }
+
 module.exports = {calculate:calculate};
 
-function multiplication(express){
-	for(let i = 0; i < express.length; i++){
-		if(express[i] == "*"){
-			let temp = parseInt(express[i-1]) * parseInt(express[i+1]);
-			express[i-1] = temp;
-			express.splice(i, 2);
-			i = i - 1;
-		}
-	}
-}
 
-function subtraction(express){
-	for(let i = 0; i < express.length; i++){
-		if(express[i] == "-"){
-			let temp = parseInt(express[i-1]) - parseInt(express[i+1]);
-			express[i-1] = temp;
-			express.splice(i, 2);
-			i = i - 1;
-			// console.log("addition method: " + express);
-		}
-	}
-}
 
-function addition(express){
+// function isInt(n) {
+// 	return n % 1 === 0;
+//  }
+
+// function multiplication(express){
+// 	for(let i = 0; i < express.length; i++){
+
+// 	}
+
+// 	return
+// }
+
+
+
+// function subtraction(express){
+// 	for(let i = 0; i < express.length; i++){
+		// if(express[i] == "-"){
+		// 	let temp = parseFloat(express[i-1]) - parseFloat(express[i+1]);
+		// 	express[i-1] = temp;
+		// 	express.splice(i, 2);
+		// 	i = i - 1;
+		// 	// console.log("addition method: " + express);
+		// }
+// 	}
+// }
+
+function addsub(express){
 	for(let i = 0; i < express.length; i++){
 		if(express[i] == "+"){
-			let temp = parseInt(express[i-1]) + parseInt(express[i+1]);
+			let temp = parseFloat(express[i-1]) + parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+			// console.log("addition method: " + express);
+		}
+
+		if(express[i] == "-"){
+			let temp = parseFloat(express[i-1]) - parseFloat(express[i+1]);
 			express[i-1] = temp;
 			express.splice(i, 2);
 			i = i - 1;
 			// console.log("addition method: " + express);
 		}
 	}
+
+	return express[0];
 }
 
-function division(express){
+
+
+
+
+
+function divmulti(express){
 	for(let i = 0; i < express.length; i++){
 		if(express[i] == "/"){
-			let temp = parseInt(express[i-1]) / parseInt(express[i+1]);
+			let temp = parseFloat(express[i-1]) / parseFloat(express[i+1]);
 			express[i-1] = temp;
 			express.splice(i, 2);
 			i = i - 1;
 			// console.log(express);
 		}
+
+		else if(express[i] == "*"){
+			let temp = parseFloat(express[i-1]) * parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+		}
+
+
+		
 	}
 
+	return express;
 	// console.log(express);
 }
 
@@ -116,21 +191,22 @@ function exponents(express){
 	for(let i = express.length-1; i >=0; i--){
 		if(express[i] == "*"){
 			if(express[i-1] == "*"){
-				temp1 = parseInt(express[i-2]) ** parseInt(express[i+1]);
+				temp1 = parseFloat(express[i-2]) ** parseFloat(express[i+1]);
 				express[i-2] = temp1;
 				express.splice(i-1, 3);
 				i = i-2;
 			}
 		}
 	}
-
-	// return express;
+	// console.log("in exponents method");
+	// console.log(express);
+	return express;
 }
 
 
-function addSubtract(str) {
-	return (str.replace(/\s/g, '').match(/[+-]?([0-9\.]+)/g) || []).reduce((acc, v) => +acc + +v);
-}
+// function addSubtract(str) {
+// 	return (str.replace(/\s/g, '').match(/[+-]?([0-9\.]+)/g) || []).reduce((acc, v) => +acc + +v);
+// }
 
 function submit(){
 	let inputField = document.getElementById("input").value;
@@ -150,7 +226,7 @@ function submit(){
 	.then(result => {
 		var finalMessage = result.data.express;
 
-		if(finalMessage.split("=")[1] === "illegal"){
+		if(finalMessage.split("=")[1] === "SyntaxError"){
 			finalMessage = "SyntaxError";
 		}
 		
@@ -162,3 +238,62 @@ function submit(){
 	});
 
 }
+
+
+
+
+
+
+
+
+	// 	return "SyntaxError";
+	// }
+	// console.log(temp);
+
+
+	// while(prepped.length != 1){
+	// 	for(let i=0; i<prepped.length; i++){
+	// 		if(prepped[i] == "/"){
+	// 			divisionTest(prepped, i);
+	// 			console.log(prepped);
+	// 			console.log(prepped[i]);
+	// 		}
+	// 		if(prepped[i] == "*" && prepped[i+1] != "**"){
+	// 			multiTest(prepped, i);
+	// 			console.log(prepped);
+	// 		}
+	// 		if(prepped[i] == "-"){
+	// 			subTest(prepped, i);
+	// 			console.log(prepped);
+	// 		}
+	// 		if(prepped[i] == "+"){
+	// 			addTest(prepped, i);
+	// 			console.log(prepped);
+	// 		}
+	// 	}
+
+	// }
+
+	// for(let i=0; i<prepped.length; i++){
+	// 	if(prepped[i] == "/"){
+	// 		divisionTest(prepped, i);
+
+	// 	}
+	// 	if(prepped[i] == "*"){
+	// 		multiTest(prepped, i);
+	// 	}
+	
+	// 	console.log(prepped);
+	// }
+
+
+
+	// console.log(prepped);
+	// exponents(prepped);
+	// multiplication(prepped);
+	// console.log(prepped);
+	// division(prepped);
+	// console.log(prepped);
+	// addition(prepped);
+	// console.log(prepped);
+	// subtraction(prepped);
