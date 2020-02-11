@@ -52,11 +52,11 @@ let calculate = function(expression) {
 		// }
 
 
-		// for(let n of temp[i]){
-		// 	if(n == " "){
-		// 		return "SyntaxError";
-		// 	}
-		// }
+		for(let n of temp[i]){
+			if(n == " "){
+				return "SyntaxError";
+			}
+		}
 		// console.log("askdmksamd");
 
 
