@@ -3,25 +3,116 @@
 // 01-24-20
 // calculator.js
 
-let calculate = function(expression) {
-	let decode = expression.replace(/%20/g, " ");
-	let stripped = decode.replace(/\s+/g, '');
-	let firstChar = stripped[0];
-	let lastChar = stripped.charAt(stripped.length - 1);
+function test(){
+	let message = document.getElementById("result");
+	let expression = document.getElementById("input").value;
+	submit();
+	message.innerHTML = expression;
+}
+
+function check(prepped){
+	let firstChar = prepped[0];
+	let lastChar = prepped[prepped.length - 1];
 	var symbols = ["+", "-", "=", "*", "/"];
 
-	if(symbols.includes(firstChar) && symbols.includes(lastChar)){
-		return "illegal";
+	if(symbols.includes(firstChar) || symbols.includes(lastChar)){
+		return false;
 	}
 
-	if (/[a-zA-Z]/.test(stripped)) {
-		return "illegal";
+	if (/[a-zA-Z]/.test(prepped.join(""))) {
+		return false;
+	}
+}
+
+let calculate = function(expression) {
+	let temp = expression.split(/([-+*\/])/);
+	let symbols = ["+", "-", "=", "*", "/"];
+
+
+	for(let i = 0; i < temp.length; i++){
+		if(temp[i] == ""){
+			temp.splice(i, 1);
+		}
+
+		if(check(temp) == false){
+			return "SyntaxError";
+		}
+
+		temp[i] = temp[i].trim();
+
+		for(let n of temp[i]){
+			if(n == " "){
+				return "SyntaxError";
+			}
+		}
 	}
 
-	answer = eval(stripped);
+	if(/([!@#$%^])/.test(temp)){
+		return "SyntaxError";
+	}
+
+	let a = exponents(temp);
+	let b = divmulti(a);
+	let answer = addsub(b);
+
 	return answer;
 }
+
 module.exports = {calculate:calculate};
+
+function addsub(express){
+	for(let i = 0; i < express.length; i++){
+		if(express[i] == "+"){
+			let temp = parseFloat(express[i-1]) + parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+		}
+
+		else if(express[i] == "-"){
+			let temp = parseFloat(express[i-1]) - parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+		}
+	}
+
+	return express[0];
+}
+
+function divmulti(express){
+	for(let i = 0; i < express.length; i++){
+		if(express[i] == "/"){
+			let temp = parseFloat(express[i-1]) / parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+		}
+
+		else if(express[i] == "*"){
+			let temp = parseFloat(express[i-1]) * parseFloat(express[i+1]);
+			express[i-1] = temp;
+			express.splice(i, 2);
+			i = i - 1;
+		}
+	}
+
+	return express;
+}
+
+function exponents(express){
+	for(let i = express.length-1; i >=0; i--){
+		if(express[i] == "*"){
+			if(express[i-1] == "*"){
+				temp1 = parseFloat(express[i-2]) ** parseFloat(express[i+1]);
+				express[i-2] = temp1;
+				express.splice(i-1, 3);
+				i = i-2;
+			}
+		}
+	}
+	return express;
+}
 
 function submit(){
 	let inputField = document.getElementById("input").value;
@@ -41,7 +132,7 @@ function submit(){
 	.then(result => {
 		var finalMessage = result.data.express;
 
-		if(finalMessage.split("=")[1] === "illegal"){
+		if(finalMessage.split("=")[1] === "SyntaxError"){
 			finalMessage = "SyntaxError";
 		}
 
@@ -49,3 +140,5 @@ function submit(){
 	});
 
 }
+
+
