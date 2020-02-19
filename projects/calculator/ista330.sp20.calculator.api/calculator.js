@@ -24,10 +24,22 @@ function check(prepped){
 	}
 }
 
+function edgeCases(array){
+	if(/([!@#$])/.test(array)){
+		return false;
+	}
+
+	for(let i =0; i < array.length; i++){
+		if(array[i] == "*" && array[i+1] == ""){
+			return false;
+		}
+	}
+}
+
 let calculate = function(expression) {
 	let temp = expression.split(/([-+*\/])/);
-	let symbols = ["+", "-", "=", "*", "/"];
 
+	console.log(temp);
 
 	for(let i = 0; i < temp.length; i++){
 		if(temp[i] == ""){
@@ -47,7 +59,7 @@ let calculate = function(expression) {
 		}
 	}
 
-	if(/([!@#$%^])/.test(temp)){
+	if(edgeCases(temp) == false){
 		return "SyntaxError";
 	}
 
@@ -57,6 +69,7 @@ let calculate = function(expression) {
 
 	return answer;
 }
+
 
 module.exports = {calculate:calculate};
 
@@ -79,6 +92,8 @@ function addsub(express){
 
 	return express[0];
 }
+
+
 
 function divmulti(express){
 	for(let i = 0; i < express.length; i++){

@@ -1,0 +1,153 @@
+// dependencies
+const express = require("express");
+const cors = require("cors")
+const fs = require("fs");
+const url = require("url");
+const bodyParser = require('body-parser');
+
+// create the server
+const app = express();
+const port = 3001;
+
+
+// variables
+let contents = [
+    {id:1, theme:'outdoors'},
+    {id:2, theme:'sports'}
+];
+
+let images = [
+    {id:1, img:'outdoors.png', contentId:1},
+    {id:2, img:'sports.png', contentId:2}
+];
+
+let sports = [
+    {1:['hit', 120, 70]},
+    {2:['serve', 366, 68]},
+    {3:['kick', 111, 175]},
+    {4:['catch', 392, 173]},
+    {5:['pass', 123, 290]},
+    {6:['run', 370, 288]},
+    {7:['fall', 136, 420]},
+    {8:['jump', 369, 417]}
+];
+
+let sports_verbs = [
+    {9:['hit', 120, 70]},
+    {2:['serve', 366, 68]},
+    {3:['kick', 111, 175]},
+    {4:['catch', 392, 173]},
+    {5:['pass', 123, 290]},
+    {6:['run', 370, 288]},
+    {7:['fall', 136, 420]},
+    {16:['jump', 369, 417]}
+]
+
+
+// the methods
+app.get('/contents', cors(), function (req, res) {
+    console.log("inside of /contents");
+	res.json(contents);
+})
+
+app.get('/pages/:contentID', cors(), function (req, res) {
+    let params = req.url.split("/");
+
+    let contentID = parseInt(params[2]);
+    let list = [];
+
+    for(let i =0; i < images.length; i++){
+        if(images[i].contentId == contentID){
+            list.push(images[i].contentId);
+        }
+    }
+    res.json(list);
+    // return list;
+})
+
+app.get('/words/:contentId/:imageId/:objectX/:objectY', cors(), function (req, res) {
+    console.log('$$$$$$$$$$$$$$$$$');
+    // res.json(contents);
+    let params = req.url.split("/");
+    console.log(params);
+
+    
+})
+
+app.get('/page/:imageId', cors(), function (req, res) {
+    let params = req.url.split("/");
+    let mode = params[2];
+
+    for(let i=0; i<images.length; i++){
+        if(mode == images[i].id){
+            if(images[i].img == 'sports.png'){
+                res.send({image: 'sports.png', info: sports});
+            }else{
+                res.send({image: 'sports_verbs.png', info: sports_verbs});
+            }
+        }
+    }
+
+})
+
+
+
+
+
+
+
+
+// the methods
+// app.get('/', cors(), (request , response) => {
+
+//     console.log("///");
+// 	var dict = {};
+//     var list = [];    
+//     let expression = request.url.split("=")[1];
+//     let themes = fs.readFileSync("themes.txt", "utf8").split("\n");
+    
+//     for(let i = 0; i < themes.length; i++){
+//         console.log(themes[i]);
+//         list.push(themes[i]);
+//     }
+
+//     dict["words"] = list;
+//     response.send(JSON.stringify(dict));
+
+// });
+
+
+
+
+
+
+
+
+
+
+// app.get('/', function (req, res) {
+// 	res.header("Access-Control-Allow-Origin", "*");
+
+// 	const queryParams = req.query;
+// 	var mode = queryParams.mode;
+// 	var book = queryParams.title;
+
+// 	if(mode == "info"){
+// 		let array = getInfo(book);
+// 		res.send(JSON.stringify(array));
+// 	}else if(mode == "description"){
+// 		let array = getDescription(book);
+// 		res.send(JSON.stringify(array));
+// 	}else if(mode == "reviews"){
+// 		let array = getReviews(book);
+// 		res.send(JSON.stringify(array));
+// 	}else if(mode == "books"){
+// 		let array = getBooks();
+// 		res.send(JSON.stringify(array));
+// 	}
+// });
+
+app.listen(port, () => console.log("Listening on port" + port));
+
+
+//flowers are fruits, the rest is veggie
