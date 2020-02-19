@@ -3,6 +3,7 @@
     let pic; 
     let URL;
     let currentPic;
+    let info;
 
     window.onload = function() {
     	console.log("window onload");
@@ -52,6 +53,7 @@
         .then(result => {
             // console.log(result.data.image);
             changeImage(result.data.image);
+            info = result.data.info;
 
 
         });
@@ -100,6 +102,14 @@
     PosY = PosY - ImgPos[1];
     console.log(PosX);
     console.log(PosY);
+    console.log(info);
+    // const keys = Object.keys(info);
+    // console.log(keys);
+    // for(let i = 0; i < info.length; i++){
+    //     console.log(info[i]);
+        
+    // }
+
 
     
 
