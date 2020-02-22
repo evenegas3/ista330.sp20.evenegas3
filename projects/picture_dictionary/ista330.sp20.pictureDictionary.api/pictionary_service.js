@@ -8,9 +8,115 @@ const bodyParser = require('body-parser');
 // create the server
 const app = express();
 const port = 3001;
+app.use(cors());
+
 
 
 // variables
+let table = [
+    {id:1, name:'supermarket'},
+    {id:2, name:'outdoor'}
+
+];
+
+let image = [
+    {id:1, name:'supermarket.png', themeId:1},
+    {id:2, name:'outdoor.png', themeId:2}
+];
+
+let words = [
+    {id:1, name: 'scale', x:120, y:250, number:7, themeId:1, imageId:23},
+    {id:2, name: 'aisle', x:450, y:230, number:10, themeId:1, imageId:23}
+];
+
+// the methods
+app.get('/contents', function (req, res) {
+    console.log("inside of /contents");
+	res.json(table);
+});
+
+
+app.get('/pages/:contentID', function (req, res) {
+    let themeId = Number(req.params.contentId);
+    let ids = images.filter(x=>x.themeId === themeId)
+                .map(x=>x.id);
+    res.json(ids);
+});
+
+
+app.get('/pages/:contentID/images/:imageId', function (req, res) {
+    let themeId = Number(req.params.contentId);
+    let imageId = Number(req.params.imageId);
+    let image = images.find(x => x.themeId === themeId && x.id === imageId);
+
+    if(image){
+        // path might give error
+        res.sendFile(__dirname +'/' +image.name);
+    }else{
+        res.status(404).send("No image found");
+    }
+
+
+    images.find(x => x.themeId === themeId && x.id === imageId);
+
+});
+
+app.get('/pages/:contentID/images/:imageId/:objectX/:objectY', function (req, res) {
+    let themeId = Number(req.params.contentId);
+    let imageId = Number(req.params.imageId);
+    let imageId = Number(req.params.imageId);
+    let imageId = Number(req.params.imageId);
+    // words
+
+    // let image = images.find(x => x.themeId === themeId && x.id === imageId);
+
+    // if(image){
+    //     // path might give error
+    //     res.sendFile(__dirname +'/' +image.name);
+    // }else{
+    //     res.status(404).send("No image found");
+    // }
+
+
+    // images.find(x => x.themeId === themeId && x.id === imageId);
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 let contents = [
     {id:1, theme:'outdoors'},
     {id:2, theme:'sports'}
@@ -44,11 +150,14 @@ let sports_verbs = [
 ]
 
 
-// the methods
-app.get('/contents', cors(), function (req, res) {
-    console.log("inside of /contents");
-	res.json(contents);
-})
+
+
+
+
+
+
+
+// own methods
 
 app.get('/pages/:contentID', cors(), function (req, res) {
     let params = req.url.split("/");
