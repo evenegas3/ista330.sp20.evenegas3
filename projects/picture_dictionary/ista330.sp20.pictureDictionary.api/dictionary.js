@@ -4,15 +4,27 @@
     let URL;
     let currentPic;
     let info;
-    let counter;
+    let counter = 0;
+
+    //test
+    let canvas;
+    let ctx;
 
     window.onload = function() {
-    	console.log("window onload");
+        console.log("window onload");
+
+        canvas = document.getElementById("canvas")
+        ctx = canvas.getContext("2d")
+
+        canvas.onmousedown = GetCoordinates;
         // var theParent = document.getElementById('listParent');
         // theParent.addEventListener('click', doSomething, false);
 
-        pic = document.getElementById("bigPicture");
-        pic.onmousedown = GetCoordinates;
+
+
+        // pic = document.getElementById("bigPicture");
+        // pic.onmousedown = GetCoordinates;
+
 
         document.querySelector('input[list="items"]').addEventListener('input', onInput);
 
@@ -82,9 +94,21 @@
     }
 
     function changeImage(result){
-        let imageElement = document.getElementById("bigPicture");
-        imageElement.src = result;
-        currentPic = result;
+        // let imageElement = document.getElementById("bigPicture");
+        // imageElement.src = result;
+        // currentPic = result;
+
+        const img = new Image()
+        img.src = result;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0 , 500, 500)
+        }
+
+        // var img = document.getElementById("scream");
+        // canvas.src = result;
+        // ctx.drawImage(result, 0, 0);
+
+        // ctx.drawImage('outdoors.png', 10, 10);
     }
     
     function FindPosition(oElement){
@@ -104,7 +128,9 @@
     var PosX = 0;
     var PosY = 0;
     var ImgPos;
-    ImgPos = FindPosition(pic);
+    // ImgPos = FindPosition(pic);
+    ImgPos = FindPosition(canvas);
+
 
     if (!e) var e = window.event;
         if (e.pageX || e.pageY){
@@ -121,18 +147,16 @@
 
     PosX = PosX - ImgPos[0];
     PosY = PosY - ImgPos[1];
+    counter += 1;
     console.log(PosX);
     console.log(PosY);
     console.log(info);
-    // const keys = Object.keys(info);
-    // console.log(keys);
-    // for(let i = 0; i < info.length; i++){
-    //     console.log(info[i]);
-        
-    // }
 
+    ctx.beginPath();
+    ctx.arc(PosX, PosY, 10, 0, 2 * Math.PI);
+    ctx.fillText(counter, PosX, PosY);
+    ctx.stroke();
 
-    
 
 
     document.getElementById("x").innerHTML = PosX;
