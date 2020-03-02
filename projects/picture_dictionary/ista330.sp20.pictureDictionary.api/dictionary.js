@@ -4,15 +4,37 @@
     let URL;
     let currentPic;
     let info;
+    let counter;
 
     window.onload = function() {
     	console.log("window onload");
-        var theParent = document.getElementById('listParent');
-        theParent.addEventListener('click', doSomething, false);
+        // var theParent = document.getElementById('listParent');
+        // theParent.addEventListener('click', doSomething, false);
 
         pic = document.getElementById("bigPicture");
         pic.onmousedown = GetCoordinates;
+
+        document.querySelector('input[list="items"]').addEventListener('input', onInput);
+
+
     };
+
+    function onInput(e) {
+        var input = e.target,
+        val = input.value;
+        list = input.getAttribute('list'),
+        options = document.getElementById(list).childNodes;
+    
+        for(var i = 0; i < options.length; i++) {
+            if(options[i].innerText === val) {
+            // alert('item selected: ' + val);
+            // break;
+            submit(val);
+            }
+        }
+    }
+
+
 
     function doSomething(e) { 
         if (e.target !== e.currentTarget) { 
@@ -51,7 +73,6 @@
             }
         })
         .then(result => {
-            // console.log(result.data.image);
             changeImage(result.data.image);
             info = result.data.info;
 

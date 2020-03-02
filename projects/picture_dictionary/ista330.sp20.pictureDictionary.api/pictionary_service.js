@@ -64,8 +64,21 @@ app.get('/pages/:contentID/images/:imageId', function (req, res) {
 app.get('/pages/:contentID/images/:imageId/:objectX/:objectY', function (req, res) {
     let themeId = Number(req.params.contentId);
     let imageId = Number(req.params.imageId);
-    let imageId = Number(req.params.imageId);
-    let imageId = Number(req.params.imageId);
+    let objectX = Number(req.params.objectX);
+    let objectY = Number(req.params.objectY);
+
+    let word = words.find(x => x.themeId === themeId &&
+        x.imageId === imageId &&
+        x.X === objectX &&
+        x.Y === objectY);
+
+
+    if(word){
+        res.json({name: word.name, number: word.number});
+    }else{
+        res.status(404).send("No words were found.");
+    }
+
     // words
 
     // let image = images.find(x => x.themeId === themeId && x.id === imageId);
