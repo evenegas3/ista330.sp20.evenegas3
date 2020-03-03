@@ -1,26 +1,18 @@
-// "use strict";
+"use strict";
 (function() {
-    let pic; 
-    let URL;
-    let currentPic;
-    let info;
     let counter = 0;
-
-    //test
     let canvas;
     let ctx;
 
     window.onload = function() {
         console.log("window onload");
 
-        let temp = document.getElementById('stepTwo');
-        temp.style.visibility = 'hidden';
+        hideDivs();
 
         canvas = document.getElementById("canvas")
         ctx = canvas.getContext("2d")
 
-        // canvas.onmousedown = GetCoordinates;
-        document.querySelector('input[list="items"]').addEventListener('input', onInput);
+        document.querySelector('input[list="items"]').addEventListener('input', userInputData);
         
         var fileVal = document.getElementById("myfile");
         fileVal.addEventListener('input', test);
@@ -28,11 +20,7 @@
     };
     
     function test(){
-        let partTwo = document.getElementById('stepTwo');
-        // partTwo.style.display = 'block';
-        partTwo.style.visibility = 'visible';
-
-        // console.log('test function');
+        visibleDivs();
 
         var fileVal = document.getElementById("myfile");
         let temp = fileVal.value.split('\\');
@@ -43,15 +31,26 @@
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
         }
+        canvas.onmousedown = getCoordinates;
 
     }
 
 
-    function onInput(e) {
-        var input = e.target;
-        val = input.value;
-        list = input.getAttribute('list');
-        options = document.getElementById(list).childNodes;
+    function userInputData(event) {
+        /**
+         * userInputData() checks to see whether the user entered a premade theme, or whether they're choosing to enter their own.
+         * If they choose their own, they will be prompted to enter the name and image by calling a helper function (test).
+         * Otherwise, function will iterate through childNodes to see which premade themes they chose.
+         * 
+         * PARAMETERS: event -- the event in which the user clicked on from datalist 'items'
+         * 
+         * RETURNS: NONE
+         */
+
+        let input = event.target;
+        let val = input.value;
+        let list = input.getAttribute('list');
+        let options = document.getElementById(list).childNodes;
 
         if(val != 'outdoors' || val != 'sports'){
             test();
@@ -74,7 +73,8 @@
             imageName = 2;
         }
 
-        url = 'http://localhost:3001/page/'+imageName;
+        let url = 'http://localhost:3001/page/'+imageName;
+
         fetch(url)
         .then(response => {
             if(response.status == 200) {
@@ -88,23 +88,19 @@
         })
         .then(result => {
             changeImage(result.data.image);
-            info = result.data.info;
-
-
         });
-    
     }
 
     function changeImage(result){
+        visibleDivs();
+
         const img = new Image()
         img.src = result;
         img.onload = () => {
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
         }
-
-        canvas.onmousedown = GetCoordinates;
-
+        canvas.onmousedown = getCoordinates;
     }
     
     function FindPosition(oElement){
@@ -120,39 +116,70 @@
         }
     }
 
-    function GetCoordinates(e){
-    var PosX = 0;
-    var PosY = 0;
-    var ImgPos;
-    ImgPos = FindPosition(canvas);
+    function getCoordinates(e){
+        /**
+         * get
+         */
+        var PosX = 0;
+        var PosY = 0;
+        var ImgPos;
+        ImgPos = FindPosition(canvas);
 
-
-    if (!e) var e = window.event;
-        if (e.pageX || e.pageY){
-            PosX = e.pageX;
-            PosY = e.pageY;
+        if (!e) var e = window.event;
+            if (e.pageX || e.pageY){
+                PosX = e.pageX;
+                PosY = e.pageY;
+            }
+        else if (e.clientX || e.clientY){
+            PosX = e.clientX + document.body.scrollLeft
+                + document.documentElement.scrollLeft;
+            PosY = e.clientY + document.body.scrollTop
+                + document.documentElement.scrollTop;
         }
-    
-    else if (e.clientX || e.clientY){
-        PosX = e.clientX + document.body.scrollLeft
-            + document.documentElement.scrollLeft;
-        PosY = e.clientY + document.body.scrollTop
-            + document.documentElement.scrollTop;
+
+        PosX = PosX - ImgPos[0];
+        PosY = PosY - ImgPos[1];
+        counter += 1;
+
+        console.log(PosX, PosY);
+
+        ctx.beginPath();
+        ctx.arc(PosX, PosY-2, 10, 0, 2 * Math.PI);
+        ctx.fillText(counter, PosX, PosY);
+        ctx.stroke();
+
+        document.getElementById("x").innerHTML = PosX;
+        document.getElementById("y").innerHTML = PosY;
     }
 
-    PosX = PosX - ImgPos[0];
-    PosY = PosY - ImgPos[1];
-    counter += 1;
+    function visibleDivs(){
+        /**
+         * visibleDivs() is a simple function that sets 'stepTwo' and 'stepThree' divs style to visible
+         * 
+         * PARAMETERS: N/A
+         * 
+         * RETURNS: N/A
+         */
+        
+        let partTwo = document.getElementById('stepTwo');
+        partTwo.style.visibility = 'visible';
+        let partThree = document.getElementById('stepThree');
+        partThree.style.visibility = 'visible';
+    }
 
-    console.log(PosX, PosY);
+    function hideDivs(){
+        /**
+         * visibleDivs() is a simple function that sets 'stepTwo' and 'stepThree' divs style to hidden
+         * 
+         * PARAMETERS: N/A
+         * 
+         * RETURNS: N/A
+         */
 
-    ctx.beginPath();
-    ctx.arc(PosX, PosY-2, 10, 0, 2 * Math.PI);
-    ctx.fillText(counter, PosX, PosY);
-    ctx.stroke();
-
-    document.getElementById("x").innerHTML = PosX;
-    document.getElementById("y").innerHTML = PosY;
+        let temp = document.getElementById('stepTwo');
+        temp.style.visibility = 'hidden';
+        let temp2 = document.getElementById('stepThree');
+        temp2.style.visibility = 'hidden';
     }
 
 })();
