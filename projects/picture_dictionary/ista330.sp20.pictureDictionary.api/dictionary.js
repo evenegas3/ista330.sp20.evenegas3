@@ -19,20 +19,20 @@
         
     };
     
-    function test(){
+    function userEnteredTheme(){
+        /**
+         * userEnteredTheme() calls visibleDivs() to display instructional divs to the user.
+         * Then retrieves the file name given by the user via the input file tag.
+         * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
+         */
+
         visibleDivs();
 
         var fileVal = document.getElementById("myfile");
         let temp = fileVal.value.split('\\');
         let userInputImage = temp[temp.length-1];
-        const img = new Image();
-        img.src = userInputImage;
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0 , 500, 500)
-          counter = 0;
-        }
-        canvas.onmousedown = getCoordinates;
 
+        changeImage(userInputData);
     }
 
 
@@ -53,7 +53,7 @@
         let options = document.getElementById(list).childNodes;
 
         if(val != 'outdoors' || val != 'sports'){
-            test();
+            userEnteredTheme();
         }
 
         for(var i = 0; i < options.length; i++) {
@@ -65,6 +65,14 @@
     }
 
     function submit(clickedItem){
+        /**
+         * submit(clickedItem) takes in the name of datalist item that the user entered via input.
+         * Then will do a fetch GET() request to server and retrieve theme id
+         * 
+         * PARAMETERS: clickedItem -- a string, the name of the theme the user clicked on from datalist.
+         * 
+         * RETURNS: N/A
+         */
         let imageName;
 
         if(clickedItem == 'outdoors'){
@@ -91,11 +99,20 @@
         });
     }
 
-    function changeImage(result){
+    function changeImage(file){
+        /**
+         * changeImage(file) takes in a string, file, which will be the name of the image chosen to be set as the background.
+         * File parameter will be set onto canvas, when the user clicks on canvas getCordinates() will be called to draw on canvas
+         * 
+         * PARAMETERS: file -- a string, the name of the image file to be set onto the canvas
+         * 
+         * RETURNS: N/A
+         */
+
         visibleDivs();
 
         const img = new Image()
-        img.src = result;
+        img.src = file;
         img.onload = () => {
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
@@ -118,8 +135,14 @@
 
     function getCoordinates(e){
         /**
-         * get
+         * getCordinates() is called when user presses down onto the canvas with mouse.
+         * Function will fetch coordinates can draw an arc where user clicked on canvas and incr global 'counter'
+         * 
+         * PARAMETERS: e -- an event
+         * 
+         * RETURNS: N/A
          */
+
         var PosX = 0;
         var PosY = 0;
         var ImgPos;
@@ -141,15 +164,10 @@
         PosY = PosY - ImgPos[1];
         counter += 1;
 
-        console.log(PosX, PosY);
-
         ctx.beginPath();
         ctx.arc(PosX, PosY-2, 10, 0, 2 * Math.PI);
         ctx.fillText(counter, PosX, PosY);
         ctx.stroke();
-
-        document.getElementById("x").innerHTML = PosX;
-        document.getElementById("y").innerHTML = PosY;
     }
 
     function visibleDivs(){
