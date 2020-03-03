@@ -7,15 +7,15 @@
     window.onload = function() {
         console.log("window onload");
 
-        hideDivs();
+        // hideDivs();
 
         canvas = document.getElementById("canvas")
         ctx = canvas.getContext("2d")
 
-        document.querySelector('input[list="items"]').addEventListener('input', userInputData);
+        document.querySelector('input[list="items"]').addEventListener('change', userInputData);
         
         var fileVal = document.getElementById("myfile");
-        fileVal.addEventListener('input', test);
+        fileVal.addEventListener('input', userEnteredTheme);
         
     };
     
@@ -26,13 +26,25 @@
          * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
          */
 
-        visibleDivs();
+        // visibleDivs();
+        // let partTwo = document.getElementById('stepTwo');
+        // partTwo.style.visibility = 'visible';
 
         var fileVal = document.getElementById("myfile");
         let temp = fileVal.value.split('\\');
         let userInputImage = temp[temp.length-1];
 
-        changeImage(userInputData);
+        const img = new Image()
+        img.src = userInputImage;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0 , 500, 500)
+          counter = 0;
+        }
+
+        // let partThree = document.getElementById('stepThree');
+        // partThree.style.visibility = 'visible';
+
+        canvas.onmousedown = getCoordinates;
     }
 
 
@@ -46,6 +58,8 @@
          * 
          * RETURNS: NONE
          */
+
+         console.log('$$$$$$$$$$$$$');
 
         let input = event.target;
         let val = input.value;
@@ -95,6 +109,10 @@
             }
         })
         .then(result => {
+
+            let partTwo = document.getElementById('stepTwo');
+
+            partTwo.style.display = 'inline';
             changeImage(result.data.image);
         });
     }
@@ -181,8 +199,8 @@
         
         let partTwo = document.getElementById('stepTwo');
         partTwo.style.visibility = 'visible';
-        let partThree = document.getElementById('stepThree');
-        partThree.style.visibility = 'visible';
+        // let partThree = document.getElementById('stepThree');
+        // partThree.style.visibility = 'visible';
     }
 
     function hideDivs(){
