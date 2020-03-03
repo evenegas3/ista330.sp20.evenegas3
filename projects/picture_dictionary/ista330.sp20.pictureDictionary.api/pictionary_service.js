@@ -79,20 +79,6 @@ app.get('/pages/:contentID/images/:imageId/:objectX/:objectY', function (req, re
         res.status(404).send("No words were found.");
     }
 
-    // words
-
-    // let image = images.find(x => x.themeId === themeId && x.id === imageId);
-
-    // if(image){
-    //     // path might give error
-    //     res.sendFile(__dirname +'/' +image.name);
-    // }else{
-    //     res.status(404).send("No image found");
-    // }
-
-
-    // images.find(x => x.themeId === themeId && x.id === imageId);
-
 });
 
 

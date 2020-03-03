@@ -13,55 +13,59 @@
     window.onload = function() {
         console.log("window onload");
 
+        let temp = document.getElementById('stepTwo');
+        temp.style.visibility = 'hidden';
+
         canvas = document.getElementById("canvas")
         ctx = canvas.getContext("2d")
 
-        canvas.onmousedown = GetCoordinates;
-        // var theParent = document.getElementById('listParent');
-        // theParent.addEventListener('click', doSomething, false);
-
-
-
-        // pic = document.getElementById("bigPicture");
-        // pic.onmousedown = GetCoordinates;
-
-
+        // canvas.onmousedown = GetCoordinates;
         document.querySelector('input[list="items"]').addEventListener('input', onInput);
-
-
+        
+        var fileVal = document.getElementById("myfile");
+        fileVal.addEventListener('input', test);
+        
     };
-
-    function onInput(e) {
-        var input = e.target,
-        val = input.value;
-        list = input.getAttribute('list'),
-        options = document.getElementById(list).childNodes;
     
-        for(var i = 0; i < options.length; i++) {
-            if(options[i].innerText === val) {
-            // alert('item selected: ' + val);
-            // break;
-            submit(val);
-            }
+    function test(){
+        let partTwo = document.getElementById('stepTwo');
+        // partTwo.style.display = 'block';
+        partTwo.style.visibility = 'visible';
+
+        // console.log('test function');
+
+        var fileVal = document.getElementById("myfile");
+        let temp = fileVal.value.split('\\');
+        let userInputImage = temp[temp.length-1];
+        const img = new Image();
+        img.src = userInputImage;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0 , 500, 500)
+          counter = 0;
         }
+
     }
 
 
+    function onInput(e) {
+        var input = e.target;
+        val = input.value;
+        list = input.getAttribute('list');
+        options = document.getElementById(list).childNodes;
 
-    function doSomething(e) { 
-        if (e.target !== e.currentTarget) { 
-            var clickedItem = e.target.id;
-            console.log(clickedItem);
-            submit(clickedItem);
+        if(val != 'outdoors' || val != 'sports'){
+            test();
         }
+
+        for(var i = 0; i < options.length; i++) {
+            if(options[i].innerText === val) {
+                submit(val);
+            }
+        }
+
     }
 
     function submit(clickedItem){
-        // let url = "http://localhost:3001/contents";
-        // let url = "http://localhost:3001/pages/1";
-
-
-        // let url = "http://localhost:3001/words/1/1/150/150";
         let imageName;
 
         if(clickedItem == 'outdoors'){
@@ -69,10 +73,8 @@
         }else if(clickedItem == 'sports'){
             imageName = 2;
         }
-        let url = 'http://localhost:3001/page/'+imageName;
-        console.log(url);
 
-
+        url = 'http://localhost:3001/page/'+imageName;
         fetch(url)
         .then(response => {
             if(response.status == 200) {
@@ -94,21 +96,15 @@
     }
 
     function changeImage(result){
-        // let imageElement = document.getElementById("bigPicture");
-        // imageElement.src = result;
-        // currentPic = result;
-
         const img = new Image()
         img.src = result;
         img.onload = () => {
           ctx.drawImage(img, 0, 0 , 500, 500)
+          counter = 0;
         }
 
-        // var img = document.getElementById("scream");
-        // canvas.src = result;
-        // ctx.drawImage(result, 0, 0);
+        canvas.onmousedown = GetCoordinates;
 
-        // ctx.drawImage('outdoors.png', 10, 10);
     }
     
     function FindPosition(oElement){
@@ -128,7 +124,6 @@
     var PosX = 0;
     var PosY = 0;
     var ImgPos;
-    // ImgPos = FindPosition(pic);
     ImgPos = FindPosition(canvas);
 
 
@@ -148,16 +143,13 @@
     PosX = PosX - ImgPos[0];
     PosY = PosY - ImgPos[1];
     counter += 1;
-    console.log(PosX);
-    console.log(PosY);
-    console.log(info);
+
+    console.log(PosX, PosY);
 
     ctx.beginPath();
-    ctx.arc(PosX, PosY, 10, 0, 2 * Math.PI);
+    ctx.arc(PosX, PosY-2, 10, 0, 2 * Math.PI);
     ctx.fillText(counter, PosX, PosY);
     ctx.stroke();
-
-
 
     document.getElementById("x").innerHTML = PosX;
     document.getElementById("y").innerHTML = PosY;
