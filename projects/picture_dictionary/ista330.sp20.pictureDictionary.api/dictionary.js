@@ -22,31 +22,14 @@
         var fileVal2 = document.getElementById("myfi");
         fileVal2.addEventListener('input', fileOptionTwo);
     };
-    // evt.currentTarget.myParam
+
     function test(event) {
         let val = event.currentTarget.myParam;
-        console.log('etst');
-        console.log(val);
-        // let input = event.target;
-        // let val = input.value;
-        // let list = input.getAttribute('idList');
+
         let options = document.getElementById('idList').childNodes;
         let partThree = document.getElementById('stepThree');
         partThree.style.display = 'inline';
         changeImage(val+'.png');
-
-        // if(themeList.includes(val)==true){
-        //     fetchIds(val);
-
-        //     let partTwo = document.getElementById('stepTwo');
-        //     partTwo.style.display = 'inline';
-            // let partThree = document.getElementById('stepThree');
-            // partThree.style.display = 'inline';
-        //     submit(val);
-        // }else{
-        //     let partTwo = document.getElementById('stepTwoOption');
-        //     partTwo.style.display = 'inline';
-        // }
     }
 
     function fetchContent(){
@@ -117,7 +100,6 @@
 
     function fetchIds(val){
         let id;
-        // console.log('fetchIds');
         for(let i=0; i<themesJson.length;i++){
             console.log(themesJson[i]);
             if (themesJson[i].name == val){
@@ -184,8 +166,6 @@
 
             let partTwo = document.getElementById('stepTwo');
             partTwo.style.display = 'inline';
-            // let partThree = document.getElementById('stepThree');
-            // partThree.style.display = 'inline';
 
             submit(val);
 
@@ -231,9 +211,6 @@
 
             partTwo.style.display = 'inline';
             changeImage(result.data.image);
-
-            // let partThree = document.getElementById('stepThree');
-            // partThree.style.display = 'inline';
         });
     }
 
@@ -319,8 +296,6 @@
         
         let partTwo = document.getElementById('stepTwo');
         partTwo.style.visibility = 'visible';
-        // let partThree = document.getElementById('stepThree');
-        // partThree.style.visibility = 'visible';
     }
 
     function hideDivs(){

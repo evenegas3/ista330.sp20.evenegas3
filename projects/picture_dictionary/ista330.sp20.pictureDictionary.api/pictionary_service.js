@@ -10,15 +10,6 @@ const app = express();
 const port = 3001;
 app.use(cors());
 
-
-// let tableOfContent = [{id: 1, name: 'The supermarket'},
-//                       {id: 2, name: 'Outdoor'},
-//                        {id: 3, name: 'houses'}];
-
-// let images = [{id:23, name:'the-supermarket.png', themeId: 1},
-//               {id:24, name:'outdoor-clothes.png', themeId: 2},
-//               {id:25, name:'houses.png', themeId: 3}];
-// variables
 let table = [
     {id:1, name:'sports'},
     {id:2, name:'outdoors'}
@@ -43,29 +34,17 @@ app.get('/contents', function (req, res) {
 
 
 app.get('/pages/:contentID', function (req, res) {
-    // let themeId = Number(req.params.contentId);
-    // console.log('pages/id');
     let params = req.url.split("/");
-    // console.log(params);
-    // console.log(params[2]);
-
     let id = parseInt(params[2]);
     let idList = []
     console.log(id);
 
     for(let i=0; i<image.length; i++){
         if(id == image[i].themeId){
-            // console.log(image[i].id);
-            // res.send(image[i].id);
             idList.push(image[i].id);
         }
     }
     res.send(idList);
-
-    // let themeId = Number(req.params.contentId);
-    // let ids = images.filter(x=>x.themeId === themeId).map(x=>x.id);
-    // console.log(ids);
-    // res.json(ids);
 });
 
 
