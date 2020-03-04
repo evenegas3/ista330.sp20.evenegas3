@@ -1,38 +1,91 @@
 "use strict";
 (function() {
     let counter = 0;
+    let themeList = []
     let canvas;
     let ctx;
 
     window.onload = function() {
         console.log("window onload");
 
-        hideDivs();
+        fetchContent();
 
         canvas = document.getElementById("canvas")
         ctx = canvas.getContext("2d")
 
-        document.querySelector('input[list="items"]').addEventListener('input', userInputData);
+        document.querySelector('input[list="items"]').addEventListener('change', userInputData);
         
         var fileVal = document.getElementById("myfile");
-        fileVal.addEventListener('input', test);
-        
-    };
-    
-    function test(){
-        visibleDivs();
+        fileVal.addEventListener('input', userEnteredTheme);
 
-        var fileVal = document.getElementById("myfile");
+        var fileVal2 = document.getElementById("myfi");
+        fileVal2.addEventListener('input', fileOptionTwo);
+    };
+
+    function fetchContent(){
+        let url = 'http://localhost:3001/contents';
+
+        fetch(url)
+        .then(response => {
+            if(response.status == 200) {
+                return response.json().then(data => {
+                    return {status: response.status, data};
+                });
+            } else {
+                console.log('Server error! Please check logs');
+                return Promise.resolve();
+            }
+        })
+        .then(result => {
+            let themesJson = result.data;
+            for(let i=0; i<themesJson.length;i++){
+                themeList.push(themesJson[i].name);
+            }
+        });
+    }
+
+    function fileOptionTwo(){
+        /**
+         * userEnteredTheme() calls visibleDivs() to display instructional divs to the user.
+         * Then retrieves the file name given by the user via the input file tag.
+         * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
+         */
+
+        var fileVal = document.getElementById("myfi");
         let temp = fileVal.value.split('\\');
         let userInputImage = temp[temp.length-1];
-        const img = new Image();
+
+        const img = new Image()
         img.src = userInputImage;
         img.onload = () => {
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
         }
+        let partThree = document.getElementById('stepThree');
+        partThree.style.display = 'inline';
         canvas.onmousedown = getCoordinates;
+    }
+    
+    function userEnteredTheme(){
+        /**
+         * userEnteredTheme() calls visibleDivs() to display instructional divs to the user.
+         * Then retrieves the file name given by the user via the input file tag.
+         * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
+         */
 
+        var fileVal = document.getElementById("myfile");
+        let temp = fileVal.value.split('\\');
+        let userInputImage = temp[temp.length-1];
+
+        const img = new Image()
+        img.src = userInputImage;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0 , 500, 500)
+          counter = 0;
+        }
+        let partThree = document.getElementById('stepThree');
+        partThree.style.display = 'inline';
+        canvas.onmousedown = getCoordinates;
     }
 
 
@@ -52,19 +105,35 @@
         let list = input.getAttribute('list');
         let options = document.getElementById(list).childNodes;
 
-        if(val != 'outdoors' || val != 'sports'){
-            test();
+        if(themeList.includes(val)==true){
+            let partTwo = document.getElementById('stepTwo');
+            partTwo.style.display = 'inline';
+        }else{
+            let partTwo = document.getElementById('stepTwoOption');
+            partTwo.style.display = 'inline';
         }
 
-        for(var i = 0; i < options.length; i++) {
-            if(options[i].innerText === val) {
-                submit(val);
-            }
-        }
+        // if(val != 'outdoors' || val != 'sports'){
+        //     userEnteredTheme();
+        // }
+
+        // for(var i = 0; i < options.length; i++) {
+        //     if(options[i].innerText === val) {
+        //         submit(val);
+        //     }
+        // }
 
     }
 
     function submit(clickedItem){
+        /**
+         * submit(clickedItem) takes in the name of datalist item that the user entered via input.
+         * Then will do a fetch GET() request to server and retrieve theme id
+         * 
+         * PARAMETERS: clickedItem -- a string, the name of the theme the user clicked on from datalist.
+         * 
+         * RETURNS: N/A
+         */
         let imageName;
 
         if(clickedItem == 'outdoors'){
@@ -87,15 +156,28 @@
             }
         })
         .then(result => {
+
+            let partTwo = document.getElementById('stepTwo');
+
+            partTwo.style.display = 'inline';
             changeImage(result.data.image);
         });
     }
 
-    function changeImage(result){
+    function changeImage(file){
+        /**
+         * changeImage(file) takes in a string, file, which will be the name of the image chosen to be set as the background.
+         * File parameter will be set onto canvas, when the user clicks on canvas getCordinates() will be called to draw on canvas
+         * 
+         * PARAMETERS: file -- a string, the name of the image file to be set onto the canvas
+         * 
+         * RETURNS: N/A
+         */
+
         visibleDivs();
 
         const img = new Image()
-        img.src = result;
+        img.src = file;
         img.onload = () => {
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
@@ -118,8 +200,14 @@
 
     function getCoordinates(e){
         /**
-         * get
+         * getCordinates() is called when user presses down onto the canvas with mouse.
+         * Function will fetch coordinates can draw an arc where user clicked on canvas and incr global 'counter'
+         * 
+         * PARAMETERS: e -- an event
+         * 
+         * RETURNS: N/A
          */
+
         var PosX = 0;
         var PosY = 0;
         var ImgPos;
@@ -141,15 +229,10 @@
         PosY = PosY - ImgPos[1];
         counter += 1;
 
-        console.log(PosX, PosY);
-
         ctx.beginPath();
         ctx.arc(PosX, PosY-2, 10, 0, 2 * Math.PI);
         ctx.fillText(counter, PosX, PosY);
         ctx.stroke();
-
-        document.getElementById("x").innerHTML = PosX;
-        document.getElementById("y").innerHTML = PosY;
     }
 
     function visibleDivs(){
@@ -163,8 +246,8 @@
         
         let partTwo = document.getElementById('stepTwo');
         partTwo.style.visibility = 'visible';
-        let partThree = document.getElementById('stepThree');
-        partThree.style.visibility = 'visible';
+        // let partThree = document.getElementById('stepThree');
+        // partThree.style.visibility = 'visible';
     }
 
     function hideDivs(){

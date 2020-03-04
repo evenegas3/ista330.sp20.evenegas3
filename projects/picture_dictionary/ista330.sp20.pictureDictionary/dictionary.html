@@ -8,47 +8,36 @@
 
 	</head>
 
-
 	<body>
 		<div id="header" style="font-size: larger;">Welcome To Picture Dictionary</div><br>
-
-		<!-- <div id="listParent">
-			<button id="sports">Sports</button>
-			<button id="outdoors">Outdoors</button>
-		</div> -->
-
 		<label for="fname">Step 1: Select or create a theme</label>
 		<input list="items" type="text"/>
+		
 		<datalist id="items">
 			<option>sports</option>
 			<option>outdoors</option>
 		</datalist><br>
 
-		<div id="stepTwo">
+		<div id="stepTwo" style="display: none;">
 			<label for="fname">Step 2: Select an image</label>
 			<input type="text" id="test2" name="test2">
 			<label for="fname">or upload a new image</label>
-			<input type="file" id="myfile" name="myfile"><br><br>
+			<input type="file" id="myfile" name="myfile"><br>
 		</div>
 
-		<div id="stepThree">
-			<label for="fname">Step 3: Add labels and words to the image:</label>
+		<div id="stepTwoOption" style='display:none'>
+			<label for="fname">Step 2: Upload a new image</label>
+			<input type="file" id="myfi" name="myfile"><br><br>
+		</div>
+
+		<div id="stepThree" style="display: none;">
+			<label for="fname">Step 3: Add labels and words to the image:</label><br>
 		</div>
 
 		<canvas width="500" height="500" id="canvas" src=></canvas>
-
-		<div id="cords" hidden>
-			<p>X:<span id="x"></span></p>
-			<p>Y:<span id="y"></span></p>
-		</div>
 
     </body>
 
 
 
 </html>
-		
-		<!-- <img width="500" height="500" alt="" id="bigPicture" />
-		<p>X:<span id="x"></span></p>
-		<p>Y:<span id="y"></span></p>
-		<p>Test:<span id="temp"></span></p> -->

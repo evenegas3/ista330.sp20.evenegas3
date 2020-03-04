@@ -14,8 +14,8 @@ app.use(cors());
 
 // variables
 let table = [
-    {id:1, name:'supermarket'},
-    {id:2, name:'outdoor'}
+    {id:1, name:'sports'},
+    {id:2, name:'outdoors'}
 
 ];
 
@@ -38,8 +38,7 @@ app.get('/contents', function (req, res) {
 
 app.get('/pages/:contentID', function (req, res) {
     let themeId = Number(req.params.contentId);
-    let ids = images.filter(x=>x.themeId === themeId)
-                .map(x=>x.id);
+    let ids = images.filter(x=>x.themeId === themeId).map(x=>x.id);
     res.json(ids);
 });
 
