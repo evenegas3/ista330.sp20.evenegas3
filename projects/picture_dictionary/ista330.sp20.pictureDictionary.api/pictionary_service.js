@@ -10,9 +10,6 @@ const app = express();
 const port = 3001;
 app.use(cors());
 
-
-
-// variables
 let table = [
     {id:1, name:'sports'},
     {id:2, name:'outdoors'}
@@ -20,8 +17,8 @@ let table = [
 ];
 
 let image = [
-    {id:1, name:'supermarket.png', themeId:1},
-    {id:2, name:'outdoor.png', themeId:2}
+    {id:10, name:'sports.png', themeId:1},
+    {id:11, name:'outdoors.png', themeId:2}
 ];
 
 let words = [
@@ -31,15 +28,23 @@ let words = [
 
 // the methods
 app.get('/contents', function (req, res) {
-    console.log("inside of /contents");
+    // console.log("inside of /contents");
 	res.json(table);
 });
 
 
 app.get('/pages/:contentID', function (req, res) {
-    let themeId = Number(req.params.contentId);
-    let ids = images.filter(x=>x.themeId === themeId).map(x=>x.id);
-    res.json(ids);
+    let params = req.url.split("/");
+    let id = parseInt(params[2]);
+    let idList = []
+    console.log(id);
+
+    for(let i=0; i<image.length; i++){
+        if(id == image[i].themeId){
+            idList.push(image[i].id);
+        }
+    }
+    res.send(idList);
 });
 
 
@@ -121,8 +126,8 @@ let contents = [
 ];
 
 let images = [
-    {id:1, img:'outdoors.png', contentId:1},
-    {id:2, img:'sports.png', contentId:2}
+    {id:10, img:'outdoors.png', contentId:1},
+    {id:11, img:'sports.png', contentId:2}
 ];
 
 let sports = [

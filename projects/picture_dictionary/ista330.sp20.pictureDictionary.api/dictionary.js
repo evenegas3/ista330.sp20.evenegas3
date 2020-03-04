@@ -1,6 +1,7 @@
 "use strict";
 (function() {
     let counter = 0;
+    let themesJson;
     let themeList = []
     let canvas;
     let ctx;
@@ -22,6 +23,15 @@
         fileVal2.addEventListener('input', fileOptionTwo);
     };
 
+    function test(event) {
+        let val = event.currentTarget.myParam;
+
+        let options = document.getElementById('idList').childNodes;
+        let partThree = document.getElementById('stepThree');
+        partThree.style.display = 'inline';
+        changeImage(val+'.png');
+    }
+
     function fetchContent(){
         let url = 'http://localhost:3001/contents';
 
@@ -37,7 +47,7 @@
             }
         })
         .then(result => {
-            let themesJson = result.data;
+            themesJson = result.data;
             for(let i=0; i<themesJson.length;i++){
                 themeList.push(themesJson[i].name);
             }
@@ -88,6 +98,52 @@
         canvas.onmousedown = getCoordinates;
     }
 
+    function fetchIds(val){
+        let id;
+        for(let i=0; i<themesJson.length;i++){
+            console.log(themesJson[i]);
+            if (themesJson[i].name == val){
+                id = themesJson[i].id;
+            }
+        }
+
+        let url = 'http://localhost:3001/pages/'+id;
+
+        fetch(url)
+        .then(response => {
+            if(response.status == 200) {
+                return response.json().then(data => {
+                    return {status: response.status, data};
+                });
+            } else {
+                console.log('Server error! Please check logs');
+                return Promise.resolve();
+            }
+        })
+        .then(result => {
+            console.log('488484');
+            console.log(result);
+            let temp = [];
+            for(let i=0; i<result.data.length; i++){
+                temp.push(result.data[i]);
+            }
+
+            var list = document.getElementById('idList');
+            
+            temp.forEach(function(item){
+               var option = document.createElement('option');
+               option.value = item;
+               list.appendChild(option);
+            });
+
+            const l = document.querySelector('input[list="idList"]');
+            l.addEventListener('change', test, false);
+            l.myParam = val;
+        });
+
+
+    }
+
 
     function userInputData(event) {
         /**
@@ -106,23 +162,17 @@
         let options = document.getElementById(list).childNodes;
 
         if(themeList.includes(val)==true){
+            fetchIds(val);
+
             let partTwo = document.getElementById('stepTwo');
             partTwo.style.display = 'inline';
+
+            submit(val);
+
         }else{
             let partTwo = document.getElementById('stepTwoOption');
             partTwo.style.display = 'inline';
         }
-
-        // if(val != 'outdoors' || val != 'sports'){
-        //     userEnteredTheme();
-        // }
-
-        // for(var i = 0; i < options.length; i++) {
-        //     if(options[i].innerText === val) {
-        //         submit(val);
-        //     }
-        // }
-
     }
 
     function submit(clickedItem){
@@ -246,8 +296,6 @@
         
         let partTwo = document.getElementById('stepTwo');
         partTwo.style.visibility = 'visible';
-        // let partThree = document.getElementById('stepThree');
-        // partThree.style.visibility = 'visible';
     }
 
     function hideDivs(){
