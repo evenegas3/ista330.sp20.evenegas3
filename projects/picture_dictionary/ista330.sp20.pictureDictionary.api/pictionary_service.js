@@ -14,8 +14,8 @@ app.use(cors());
 
 // variables
 let table = [
-    {id:1, name:'supermarket'},
-    {id:2, name:'outdoor'}
+    {id:1, name:'sports'},
+    {id:2, name:'outdoors'}
 
 ];
 

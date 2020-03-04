@@ -1,13 +1,14 @@
 "use strict";
 (function() {
     let counter = 0;
+    let themeList = []
     let canvas;
     let ctx;
 
     window.onload = function() {
         console.log("window onload");
 
-        // hideDivs();
+        fetchContent();
 
         canvas = document.getElementById("canvas")
         ctx = canvas.getContext("2d")
@@ -16,8 +17,54 @@
         
         var fileVal = document.getElementById("myfile");
         fileVal.addEventListener('input', userEnteredTheme);
-        
+
+        var fileVal2 = document.getElementById("myfi");
+        fileVal2.addEventListener('input', fileOptionTwo);
     };
+
+    function fetchContent(){
+        let url = 'http://localhost:3001/contents';
+
+        fetch(url)
+        .then(response => {
+            if(response.status == 200) {
+                return response.json().then(data => {
+                    return {status: response.status, data};
+                });
+            } else {
+                console.log('Server error! Please check logs');
+                return Promise.resolve();
+            }
+        })
+        .then(result => {
+            let themesJson = result.data;
+            for(let i=0; i<themesJson.length;i++){
+                themeList.push(themesJson[i].name);
+            }
+        });
+    }
+
+    function fileOptionTwo(){
+        /**
+         * userEnteredTheme() calls visibleDivs() to display instructional divs to the user.
+         * Then retrieves the file name given by the user via the input file tag.
+         * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
+         */
+
+        var fileVal = document.getElementById("myfi");
+        let temp = fileVal.value.split('\\');
+        let userInputImage = temp[temp.length-1];
+
+        const img = new Image()
+        img.src = userInputImage;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0 , 500, 500)
+          counter = 0;
+        }
+        let partThree = document.getElementById('stepThree');
+        partThree.style.display = 'inline';
+        canvas.onmousedown = getCoordinates;
+    }
     
     function userEnteredTheme(){
         /**
@@ -25,10 +72,6 @@
          * Then retrieves the file name given by the user via the input file tag.
          * Lastly, calls the changeImage() with the image name to be displayed onto the canvas.
          */
-
-        // visibleDivs();
-        // let partTwo = document.getElementById('stepTwo');
-        // partTwo.style.visibility = 'visible';
 
         var fileVal = document.getElementById("myfile");
         let temp = fileVal.value.split('\\');
@@ -40,10 +83,8 @@
           ctx.drawImage(img, 0, 0 , 500, 500)
           counter = 0;
         }
-
-        // let partThree = document.getElementById('stepThree');
-        // partThree.style.visibility = 'visible';
-
+        let partThree = document.getElementById('stepThree');
+        partThree.style.display = 'inline';
         canvas.onmousedown = getCoordinates;
     }
 
@@ -59,22 +100,28 @@
          * RETURNS: NONE
          */
 
-         console.log('$$$$$$$$$$$$$');
-
         let input = event.target;
         let val = input.value;
         let list = input.getAttribute('list');
         let options = document.getElementById(list).childNodes;
 
-        if(val != 'outdoors' || val != 'sports'){
-            userEnteredTheme();
+        if(themeList.includes(val)==true){
+            let partTwo = document.getElementById('stepTwo');
+            partTwo.style.display = 'inline';
+        }else{
+            let partTwo = document.getElementById('stepTwoOption');
+            partTwo.style.display = 'inline';
         }
 
-        for(var i = 0; i < options.length; i++) {
-            if(options[i].innerText === val) {
-                submit(val);
-            }
-        }
+        // if(val != 'outdoors' || val != 'sports'){
+        //     userEnteredTheme();
+        // }
+
+        // for(var i = 0; i < options.length; i++) {
+        //     if(options[i].innerText === val) {
+        //         submit(val);
+        //     }
+        // }
 
     }
 
