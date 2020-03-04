@@ -16,18 +16,26 @@
 		<datalist id="items">
 			<option>sports</option>
 			<option>outdoors</option>
+		</datalist>
+
+		<datalist id="idList">
+			<option></option>
+			<!-- <option>outdoors</option> -->
 		</datalist><br>
 
 		<div id="stepTwo" style="display: none;">
 			<label for="fname">Step 2: Select an image</label>
-			<input type="text" id="test2" name="test2">
+			<!-- <input type="text" id="test2" name="test2"> -->
+			<input list="idList" type="text"/>
+			
+			
 			<label for="fname">or upload a new image</label>
 			<input type="file" id="myfile" name="myfile"><br>
 		</div>
 
 		<div id="stepTwoOption" style='display:none'>
 			<label for="fname">Step 2: Upload a new image</label>
-			<input type="file" id="myfi" name="myfile"><br><br>
+			<input type="file" id="myfi" name="myfile"><br>
 		</div>
 
 		<div id="stepThree" style="display: none;">
