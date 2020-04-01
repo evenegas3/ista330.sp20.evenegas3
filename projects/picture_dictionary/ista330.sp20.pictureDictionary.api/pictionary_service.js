@@ -4,6 +4,8 @@ const cors = require("cors")
 const fs = require("fs");
 const url = require("url");
 const bodyParser = require('body-parser');
+const db = require('./db.js');
+
 
 // create the server
 const app = express();
@@ -26,9 +28,27 @@ let words = [
     {id:2, name: 'aisle', x:450, y:230, number:10, themeId:1, imageId:23}
 ];
 
-// the methods
+
+app.get('/test', function (req, res) {
+    db.test()
+    console('$');
+    console.log(x);
+
+	// res.json(table);
+});
+
+// app.get('/contents', (request, response) => {
+//     let date = new Date(Date.now()).toString();
+//     console.log('/contents');
+//     db.getAllThemes()
+//     .then(x => response.json(x))
+//     .catch(e => response.status(500).send('The themes could not be retrieved.'));
+//   });
+
+
+
+
 app.get('/contents', function (req, res) {
-    // console.log("inside of /contents");
 	res.json(table);
 });
 
