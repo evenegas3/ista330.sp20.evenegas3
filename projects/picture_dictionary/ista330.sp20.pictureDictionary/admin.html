@@ -142,7 +142,7 @@
       // get the current themes
       getAndDispalyThemes();
 
-      function saveImage() {
+      function saveImage(persistLabelFunction) {
         canvas.toBlob(blob => {
           const formData = new FormData();
           formData.append('image', blob);
@@ -150,11 +150,13 @@
           if (currentImageId === -1) {
               fetch(`${url}/image/${themeId}`, {method: 'POST', body: formData})
               .then(getJsonFromResponse)
-              .then(x => {console.log(x); currentImageId = x;});
+              .then(x => {console.log(x); currentImageId = x;persistLabelFunction()})
+              .catch(e => console.log(e));
 
          } else {
            fetch(`${url}/image/${currentImageId}`, {method: 'PUT', body: formData})
-           .then(getJsonFromResponse);
+           .then(getJsonFromResponse)
+           .then(() => persistLabelFunction());
          }
         });
       }
@@ -189,6 +191,8 @@
         context.fill();
         context.fillStyle = 'black';
         context.fillText(number, x-3, y+3);
+        let saveLabelFuction = () => saveLabel('post', 'undefined')
+
         saveImage();
         labels.push({x:x, y:y, number: number, name:'', id:-1});
         saveLabel('post', 'undefined', x, y, number, currentImageId, -1);
@@ -226,7 +230,16 @@
         // the id of this label in the labels variable. For example you can use the following code:
         //             let i = labels.findIndex(x => x.number === number);
         //             labels[i].id = newLabelId;
-        //      2. if the method is put: update the name(the word) of the label    
+        //      2. if the method is put: update the name(the word) of the label 
+        if(method == "POST"){
+          let i = labels.findIndex(x => x.number === number);
+          labels[i].id = newLabelId;
+        }else{
+          let i = labels.findIndex(x => x.number === number);
+          labels[i].name = name;
+        }
+        
+        
       }
 
 
