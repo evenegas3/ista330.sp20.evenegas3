@@ -2,9 +2,242 @@
 <html>
 
 	<head>
-		<script src="category0.js" type="text/javascript"></script>
-		<link rel="stylesheet" type="text/css" href="category0.css">
+		<!-- <script src="category0.js" type="text/javascript"></script> -->
+		<!-- <link rel="stylesheet" type="text/css" href="category0.css"> -->
 	</head>
+	<style>
+		body{
+	font-size: 20px;
+	color: #000000;
+  font-weight: 300;
+  text-align: center;
+}
+
+h1{
+  font-weight: 300;
+  margin: 0px;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #444;
+  color: #fff;
+}
+.question{
+  font-size: 30px;
+  margin-bottom: 10px;
+  background-image: 'background.png';
+}
+
+.question{
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.answers {
+  margin-bottom: 20px;
+  text-align: left;
+  display: inline-block;
+}
+.answers label{
+  display: block;
+  margin-bottom: 10px;
+}
+button{
+  font-family: 'Work Sans', sans-serif;
+	font-size: 22px;
+	background-color: #279;
+	color: #fff;
+	border: 0px;
+	border-radius: 3px;
+	padding: 20px;
+	cursor: pointer;
+	margin-bottom: 20px;
+}
+button:hover{
+	background-color: #38a;
+}
+.slide{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.active-slide{
+  opacity: 1;
+  z-index: 2;
+}
+.quiz-container{
+  position: relative;
+  height: 200px;
+  margin-top: 40px;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+.flex-container > div {
+  background-color: #f1f1f1;
+  width: 100px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+	</style>
+
+	<script>
+		(function() {
+	let currUserDisplay;
+	let questionsAnswers = [
+		{
+		  image: "background.png",
+		  question: "Who topped the UK Charts with 'If I Was' in 1985?",
+		  answers: {
+			a: "The Smiths",
+			b: "Michael Jackson",
+			c: "Midge Ure"
+		  },
+		  correctAnswer: "c"
+		},
+		{
+		  image: "background.png",
+		  question: "Which male artist sang the lyrics, How can you leave me standing? Alone in a world that's so cold??",
+		  answers: {
+			a: "Jimi Hendrix: All Along The Watchtower",
+			b: "David Bowie: Space Oddity",
+			c: "Prince: When Doves Cry"
+		  },
+		  correctAnswer: "c"
+		},
+		{
+		  image: "background.png",
+		  question: "How Many Records Have The Beatles Sold in The U.S?",
+		  answers: {
+			a: "250 million",
+			b: "100 million",
+			c: "183 million",
+		  },
+		  correctAnswer: "c"
+		}
+	  ];
+
+	window.onload = function() { 
+		let submitButton = document.getElementById('submit');
+		let previousButton = document.getElementById("previous");
+		let nextButton = document.getElementById("next");
+		currUserDisplay = 0;
+
+		submitButton.addEventListener('click', showResults);
+		previousButton.addEventListener("click", displayPreviousSlide);
+		nextButton.addEventListener("click", displayNextSlide);
+
+		buildQuiz(questionsAnswers);
+		showSlide(currUserDisplay);
+	};
+
+	function showResults(){
+		let quizContainer = document.getElementById('quiz');
+		const answerContainers = quizContainer.querySelectorAll('.answers');
+		let resultsContainer = document.getElementById('results');
+		let numCorrect = 0;
+
+		questionsAnswers.forEach( (currentQuestion, questionNumber) => {
+		  const answerContainer = answerContainers[questionNumber];
+		  const selector = `input[name=question${questionNumber}]:checked`;
+		  const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+		  if(userAnswer === currentQuestion.correctAnswer){
+			numCorrect++;
+	
+			answerContainers[questionNumber].style.color = 'lightgreen';
+		  }
+		  else{
+			answerContainers[questionNumber].style.color = 'red';
+		  }
+		});
+	
+		resultsContainer.innerHTML = `${numCorrect} out of ${questionsAnswers.length}`;
+	  }
+
+
+	function displayNextSlide() {
+		showSlide(currUserDisplay + 1);
+	}
+	
+	function displayPreviousSlide() {
+		showSlide(currUserDisplay - 1);
+	}
+
+    function buildQuiz(myQuestions){
+		const output = [];
+		let quizContainer = document.getElementById('quiz');
+
+		myQuestions.forEach(
+		  (currentQuestion, questionNumber) => {
+	
+			const answers = [];
+	
+			for(letter in currentQuestion.answers){
+	
+			  answers.push(
+				`<label>
+				  <input type="radio" name="question${questionNumber}" value="${letter}">
+				  ${letter} :
+				  ${currentQuestion.answers[letter]}
+				</label>`
+			  );
+			}
+	
+			output.push(
+			  `<div class="slide">
+
+				<div class="question"> ${currentQuestion.question} </div>
+				<div class="answers"> ${answers.join("")} </div>
+			  </div>`
+			);
+		  }
+		);
+		// <img src="background.png" width="100" height="100" style="border:5px solid black">
+
+		quizContainer.innerHTML = output.join('');
+	  }
+
+	  function showSlide(n) {
+		let submitButton = document.getElementById('submit');
+		let nextButton = document.getElementById("next");
+		let previousButton = document.getElementById("previous");
+		let slides = document.querySelectorAll(".slide");
+
+		slides[currUserDisplay].classList.remove('active-slide');
+		slides[n].classList.add('active-slide');
+		currUserDisplay = n;
+
+		if(currUserDisplay === 0){
+		  previousButton.style.display = 'none';
+		}
+		else{
+		  previousButton.style.display = 'inline-block';
+		}
+		if(currUserDisplay === slides.length-1){
+		  nextButton.style.display = 'none';
+		  submitButton.style.display = 'inline-block';
+		}
+		else{
+		  nextButton.style.display = 'inline-block';
+		  submitButton.style.display = 'none';
+		}
+	  }
+
+}());
+
+	</script>
+
+
+
+
+
 
 	<body>
 		<h1>NBA Must Know Questions (2020 update)</h1>

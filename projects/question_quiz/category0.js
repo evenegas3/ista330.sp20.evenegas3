@@ -13,7 +13,7 @@
 		},
 		{
 		  image: "background.png",
-		  question: "Which male artist sang the lyrics, 'How can you leave me standing? Alone in a world that's so cold'??",
+		  question: "Which male artist sang the lyrics, How can you leave me standing? Alone in a world that's so cold??",
 		  answers: {
 			a: "Jimi Hendrix: All Along The Watchtower",
 			b: "David Bowie: Space Oddity",
@@ -141,9 +141,3 @@
 	  }
 
 }());
-
-
-// <div class="image"> 
-// <img height="42" width="42" src= ${currentQuestion.image} />
-
-// </div>
